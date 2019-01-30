@@ -1,0 +1,44 @@
+﻿@using Event.Models
+@using Microsoft.AspNet.Identity
+@{
+    var _context = new ApplicationDbContext();
+
+    var user = _context.Users.Find(User.Identity.GetUserId());
+}
+
+@if (Request.IsAuthenticated)
+{
+    <div id="dropdown">
+
+        @{
+            if (user.Image == null)
+            {
+                <img src="/Content/image/profile.png" alt="profile">
+            }
+            else
+            {
+                <img src=@user.Image alt="profile">
+            }
+        }
+
+
+        <div id="dropdown-content">
+
+            <a href="#">@User.Identity.GetUserName()</a>
+            <a href="/Profile/Index">پروفايل</a>
+
+            <a href="#" onclick="document.getElementById('logout-frm').submit();">خروج</a>
+
+            <form id="logout-frm" action="/Account/LogOff" method="post">
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="menu">
+        <a href="/Account/Login">ورود</a>
+        <a href="/Account/Register">ثبت نام</a>
+    </div>
+}

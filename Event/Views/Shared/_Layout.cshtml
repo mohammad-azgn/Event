@@ -1,0 +1,44 @@
+﻿@using Event.Models
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/style.css">
+</head>
+
+
+<body>
+
+<nav>
+    <div class="menu">
+        <a href="/Home/Index">خانه</a>
+        <a href="/Home/About">درباره ما</a>
+        @if (User.IsInRole(RoleName.admin))
+        {
+         <a style="color: red" href="/Event/Create">ایجاد رویداد</a>
+        }
+    </div>
+
+    @Html.Partial("_LoginPartial")
+</nav>
+
+<header>
+    <h1>Event Manager</h1>
+</header>
+
+
+@RenderBody()
+
+<footer>
+    <p>
+        All rights reserved
+    </p>
+</footer>
+    
+
+
+</body>
+</html>

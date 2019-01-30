@@ -1,0 +1,48 @@
+﻿@using Event.Models
+@model LoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section>
+
+    @using (Html.BeginForm("Login", "Account"
+        , FormMethod.Post, new {@class = "login_form"}))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary()
+
+
+        @Html.TextBoxFor(m => m.Email, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.Email)
+        })
+
+
+        @Html.TextBoxFor(m => m.Password,
+            new
+            {
+                @class = "input", type = "password",
+                placeholder = Html.DisplayNameFor(m => m.Password)
+            })
+
+
+        <div>
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe)
+        </div>
+
+        <input class="submit" type="submit" value="ورود">
+
+
+        <div>
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel {ReturnUrl = ViewBag.ReturnUrl})
+            </section>
+        </div>
+    }
+
+</section>

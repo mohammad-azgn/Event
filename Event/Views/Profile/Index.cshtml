@@ -1,0 +1,208 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using Event.Models
+@using Microsoft.AspNet.Identity
+@model global::Event.ViewModels.ProfileViewModel
+
+
+<section>
+    <div id="pro">
+        <div id="profile_image">
+            <h2>تصویر کاربر</h2>
+            @{
+                if (Model.Image == null)
+                {
+                    <img src="/Content/image/profile.png" alt="profile">
+                }
+                else
+                {
+                    <img src=@Model.Image alt="profile">
+                }
+            }
+
+
+            @using (Html.BeginForm("Update", "Profile", FormMethod.Post
+                , new { enctype = "multipart/form-data", style = "display:flex" }))
+            {
+                <label class="profile_btn">
+                    <input type="file" style="display: none" name="HttpPostedFileBase" />
+                    انتخاب تصویر
+                </label>
+
+                <label class="profile_btn">
+                    <input type="submit" style="display: none">
+                    ارسال
+                </label>
+
+                @Html.AntiForgeryToken()
+            }
+
+
+        </div>
+
+
+        <div id="profile">
+            <h2>مشخصات فردی</h2>
+            <div class="profile_row">
+                <div class="profile_col">
+                    <p>
+                        <span>نام:</span>
+                        @Model.FirstName
+                    </p>
+                </div>
+                <div class="profile_col">
+                    <p>
+                        <span>نام خانوادگی:</span>
+                        @Model.LastName
+                    </p>
+                </div>
+            </div>
+            <div class="profile_row">
+                <div class="profile_col">
+                    <p>
+                        <span>ایمیل:</span>
+                        @Model.Email
+                    </p>
+                </div>
+                <div class="profile_col">
+                    <p>
+                        <span>شماره تلفن:</span>
+                        @Model.PhoneNumber
+                    </p>
+                </div>
+            </div>
+            <div class="profile_row">
+                <div class="profile_col">
+                    <p>
+                        <span>سمت:</span>
+                        @if (User.IsInRole(RoleName.admin))
+                        {
+                            <a>ادمین</a>
+                        }
+                        else
+                        {
+                            <a>شرکت کننده</a>
+                        }
+                    </p>
+                </div>
+                <div class="profile_col">
+                    <p>
+                        <span>کد ملی:</span>
+                        @Model.NationalId
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (User.IsInRole(RoleName.admin))
+{
+    <section>
+        <div class="result">
+            <h2>شرکت کنندگان در رویداد</h2>
+            <table>
+                <tr>
+                    <th>نام</th>
+                    <th>رویداد</th>
+                    <th>عملیات</th>
+                </tr>
+
+
+                @{
+                    var context = new ApplicationDbContext();
+
+
+                    foreach (var items in Model.UserEvents)
+                    {
+                        if (items.Request == global::Event.Models.Request.None)
+                        {
+                            var eventName = context.Events.Find(items.EventId);
+                            var userName = context.Users.Find(items.ApplicationUserId);
+
+
+                            <tr>
+                                <td>@userName.FirstName @userName.LastName</td>
+                                <td>@eventName.Name</td>
+
+                                <td class="btn">
+
+
+                                    <form id="Allow" action="/Profile/Allow" method="post">
+                                        <a onclick="document.getElementById('Allow').submit();">تایید</a>
+
+                                        <input hidden="" value="@userName.Id" name="userId">
+                                        <input hidden="" value="@eventName.Id" name="eventId">
+
+                                        @Html.AntiForgeryToken()
+                                    </form>
+
+                                    <form id="Reject" action="/Profile/Reject" method="post">
+                                        <a onclick="document.getElementById('Reject').submit();">رد</a>
+
+                                        <input hidden="" value="@userName.Id" name="userId">
+                                        <input hidden="" value="@eventName.Id" name="eventId">
+
+                                        @Html.AntiForgeryToken()
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+
+
+        </div>
+    </section>
+}
+else
+{
+    <section>
+        <div class="result">
+            <h2>وضعیت درخواست شرکت در رویداد</h2>
+            <table>
+                <tr>
+                    <th>رویداد</th>
+                    <th>وضعیت</th>
+                </tr>
+
+                @{
+                    var context = new ApplicationDbContext();
+                   
+
+                    foreach (var items in Model.UserEvents)
+                    {
+                        if (User.Identity.GetUserId() == items.ApplicationUserId)
+                        {
+                            var eventName = context.Events.Find(items.EventId);
+
+                            <tr>
+                                <td>@eventName.Name</td>
+
+
+                                @if (items.Request == global::Event.Models.Request.Allow)
+                                {
+                                    <td>پذیرفته شد</td>
+                                }
+                                else if (items.Request == global::Event.Models.Request.Deny)
+                                {
+                                    <td>رد شد</td>
+                                }
+                                else
+                                {
+                                    <td>درحال بررسی</td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        </div>
+    </section>
+}

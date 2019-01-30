@@ -1,0 +1,68 @@
+﻿@model Event.Models.RegisterViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section>
+
+    @using (Html.BeginForm("Register", "Account"
+        , FormMethod.Post, new {@class = "login_form"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+
+        @Html.TextBoxFor(m => m.FirstName, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.FirstName)
+        })
+
+
+        @Html.TextBoxFor(m => m.LastName, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.LastName)
+        })
+
+
+        @Html.TextBoxFor(m => m.Email, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.Email)
+        })
+
+
+        @Html.TextBoxFor(m => m.NationalId, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.NationalId)
+        })
+
+
+        @Html.TextBoxFor(m => m.PhoneNumber, new
+        {
+            @class = "input", type = "text",
+            placeholder = Html.DisplayNameFor(m => m.PhoneNumber)
+        })
+
+
+        @Html.TextBoxFor(m => m.Password,
+            new
+            {
+                @class = "input", type = "password",
+                placeholder = Html.DisplayNameFor(m => m.Password)
+            })
+
+
+        @Html.TextBoxFor(m => m.ConfirmPassword,
+            new
+            {
+                @class = "input", type = "password",
+                placeholder = Html.DisplayNameFor(m => m.ConfirmPassword)
+            })
+
+        <input class="submit" type="submit" value="ثبت نام">
+    }
+</section>

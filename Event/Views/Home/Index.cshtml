@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@* @model IEnumerable<Event> *@
+@using Event.Models
+@using PagedList.Mvc
+@model PagedList.IPagedList<Event>
+
+<section id="event">
+
+    @foreach (var events in Model)
+    {
+        <div class="event_item">
+            <img src="@events.Pictures" alt="event_image"/>
+            <h2>@events.Name</h2>
+
+            <div class="event_btn">
+                @if (User.IsInRole(RoleName.admin))
+                {
+                    <a href="/Event/Edit/@events.Id">ویرایش</a>
+                    <a href="/Event/Index/@events.Id">جزئیات</a>
+                    <a href="/Event/Delete/@events.Id">حذف</a>
+                }
+                else
+                {
+                    <a href="/Event/Index/@events.Id" target="_blank">ثبت نام</a>
+                }
+            </div>
+
+
+        </div>
+    }
+
+</section>
+
+<div id="page">
+    page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@(Model.PageCount)
+</div>
+<div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new {page}))
+</div>
+
+
+<script src="main.js"></script>

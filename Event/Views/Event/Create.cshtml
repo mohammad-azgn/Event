@@ -1,0 +1,100 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Event.ViewModels.EventViewModel
+
+<section>
+
+
+    @using (Html.BeginForm("Save", "Event", FormMethod.Post
+        , new {id = "event_form", enctype = "multipart/form-data"}))
+    {
+        @Html.AntiForgeryToken()
+
+
+        <div class="items">
+            @Html.LabelFor(m => m.Name, new {@class = "title"})
+
+            @Html.TextBoxFor(m => m.Name, new
+            {
+                @class = "input", type = "text",
+                placeholder = Html.DisplayNameFor(m => m.Name),
+                required = "required"
+            })
+        </div>
+
+
+        <div class="items">
+            @Html.LabelFor(m => m.Description, new {@class = "title"})
+
+            @Html.TextAreaFor(m => m.Description, new
+            {
+                @class = "input", type = "text",
+                placeholder = Html.DisplayNameFor(m => m.Description),
+                required = "required"
+            })
+        </div>
+
+
+        <div class="items">
+            <div class="time">
+                <div>
+                    @Html.LabelFor(m => m.StartTime, new {@class = "title"})
+                    @Html.TextBoxFor(model => model.StartTime, new
+                    {@class = "input", type = "datetime-local", required = "required"})
+                </div>
+            </div>
+            <div class="time">
+                <div>
+                    @Html.LabelFor(m => m.FinishTime, new {@class = "title"})
+                    @Html.TextBoxFor(model => model.FinishTime, new
+                    {@class = "input", type = "datetime-local", required = "required"})
+                </div>
+            </div>
+        </div>
+
+
+        <div class="items" id="location">
+
+            @Html.LabelFor(m => m.Location, new {@class = "title"})
+
+            @Html.TextBoxFor(m => m.Location, new
+            {
+                @class = "input", type = "text",
+                placeholder = Html.DisplayNameFor(m => m.Location),
+                required = "required"
+            })
+
+        </div>
+
+        <div class="items" id="upload">
+            <div class="title">آپلود تصویر</div>
+            <div class="flex">
+                <div>
+                    @Html.LabelFor(m => m.HttpPictures)
+
+                    @Html.TextBoxFor(model => model.HttpPictures, new
+                    {style = "display:none", type = "file", required = "required"})
+                </div>
+                <div>
+                    @Html.LabelFor(m => m.HttpOrganizers)
+
+                    @Html.TextBoxFor(model => model.HttpOrganizers, new
+                    {style = "display:none", type = "file", required = "required"})
+                </div>
+                <div>
+                    @Html.LabelFor(m => m.HttpSponsor)
+
+                    @Html.TextBoxFor(model => model.HttpSponsor, new
+                    {style = "display:none", type = "file", required = "required"})
+                </div>
+            </div>
+        </div>
+
+
+        @Html.HiddenFor(m => m.Id)
+
+        <input id="submit" type="submit" value="ارسال">
+    }
+
+</section>

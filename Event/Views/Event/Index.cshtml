@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Event.Models
+@using Microsoft.AspNet.Identity
+@model Event
+
+<section>
+    <div id="e_details">
+        <div class="item one">
+            <div id="title">
+
+                <h1>
+                    @Model.Name
+                </h1>
+            </div>
+            <div id="time">
+                <div class="label">زمان شروع رویداد:</div>
+                <div class="value">@Model.StartTime</div>
+
+
+                <div class="label">زمان پایان رویداد:</div>
+                <div class="value">@Model.FinishTime</div>
+
+                <div class="label">مکان:</div>
+                <div class="value">@Model.Location</div>
+            </div>
+            @if (Request.IsAuthenticated && !User.IsInRole(RoleName.admin))
+            {
+                var context = new ApplicationDbContext();
+                var request = context.UserEvents.Find(User.Identity.GetUserId(), Model.Id);
+
+                if (request.Request == global::Event.Models.Request.None)
+                {
+                    <div id="btn">
+                        درخواست شما در حال بررسی می باشد
+                    </div>
+                }
+                else
+                {
+                    <div id="btn">
+                        <a href="/Profile/Participation/@Model.Id">شرکت در رویداد</a>
+                    </div>
+                }
+            }
+
+        </div>
+
+        <div class="item two">
+            <img src="@Model.Pictures" alt="">
+        </div>
+    </div>
+    <div class="box" id="e_about">
+        <h2>درباره رویداد</h2>
+        <p>@Model.Description</p>
+    </div>
+    <div class="box logo">
+        <h2>برگزار کنندگان</h2>
+        <div class="flex">
+            <div>
+                <img src="@Model.Organizers" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="box logo">
+        <h2>حامیان</h2>
+        <div class="flex">
+            <div>
+                <img src="@Model.Sponsor" alt="">
+            </div>
+        </div>
+
+    </div>
+</section>
